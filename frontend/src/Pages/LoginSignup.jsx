@@ -15,7 +15,7 @@ const LoginSignup = () => {
     setError("");
 
     axios
-      .post("http://localhost:3001/register", { name, email, password })
+      .post(`${process.env.REACT_APP_API_URL}/register`, { name, email, password })
       .then((result) => {
         console.log(result);
         navigate("/Auth");
