@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from "react";
-import "./NewCollections.css"; 
+import "./NewCollections.css";
 import Item from "../Item/Item";
 
 const NewCollections = () => {
+  const [new_collections, setNew_collections] = useState([]);
 
-  const [new_collections,setNew_collections] = useState([]);
-
-  useEffect(()=>{
-    fetch(`${process.env.REACT_APP_API_URL}/newcollection`)
-    .then((res)=>res.json())
-    .then((data)=>setNew_collections(data))
-  },[])
+  useEffect(() => {
+    fetch(`https://gen-z-backend-z0uf.onrender.com/newcollection`)
+      .then((res) => res.json())
+      .then((data) => setNew_collections(data));
+  }, []);
 
   return (
     <div className="new-collections">

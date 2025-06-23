@@ -3,14 +3,14 @@ import "./Popular.css";
 import Item from "../Item/Item";
 
 const Popular = () => {
+  const [popularproducts, setPopularproducts] = useState([]);
 
-  const [popularproducts,setPopularproducts] = useState([]);
-
-  useEffect(()=>{
-    fetch(`${process.env.REACT_APP_API_URL}/popularinwomen`)
-    .then((res)=>res.json())
-    .then((data)=>setPopularproducts(data));
-  },[])
+  useEffect(() => {
+    fetch(`https://gen-z-backend-z0uf.onrender.com/popularinwomen`)
+      .then((res) => res.json())
+      .then((data) => setPopularproducts(data));
+    console.log("API URL:", process.env.REACT_APP_API_URL);
+  }, []);
 
   return (
     <div className="popular">

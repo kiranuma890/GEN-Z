@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
@@ -7,18 +9,20 @@ const jwt = require("jsonwebtoken");
 const multer = require("multer");
 const path = require("path");
 const Product = require("./model/image");
-const { error } = require("console");
+const PORT = process.env.PORT || 3001;
 
 app.use(express.json());
 app.use(cors());
 
 mongoose
-  .connect("mongodb://localhost:27017/gen-z", {
+  .connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() => console.log("mongodb connected"))
+  .then(() => console.log("mongodb atlas connected"))
   .catch((err) => console.log(err));
+  console.log("MONGO_URI:", process.env.MONGO_URI);
+
 
 // resgister
 
@@ -154,6 +158,10 @@ app.get("/popularinwomen", async (req,res) => {
   
 })
 
-app.listen(3001, () => {
-  console.log("server is running");
+app.get("/test", (req, res) => {
+  res.send("Backend is alive!");
+});
+
+app.listen(PORT, () => {
+  console.log(`server is running on ${PORT}`);
 });
