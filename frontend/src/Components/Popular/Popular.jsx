@@ -6,7 +6,7 @@ const Popular = () => {
   const [popularproducts, setPopularproducts] = useState([]);
 
   useEffect(() => {
-    fetch(`https://gen-z-backend-z0uf.onrender.com/popularinwomen`)
+    fetch(`${process.env.REACT_APP_API_URL}/popularinwomen`)
       .then((res) => res.json())
       .then((data) => setPopularproducts(data));
     console.log("API URL:", process.env.REACT_APP_API_URL);

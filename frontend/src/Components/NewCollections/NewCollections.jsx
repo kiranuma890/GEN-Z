@@ -6,7 +6,7 @@ const NewCollections = () => {
   const [new_collections, setNew_collections] = useState([]);
 
   useEffect(() => {
-    fetch(`https://gen-z-backend-z0uf.onrender.com/newcollection`)
+    fetch(`${process.env.REACT_APP_API_URL}/newcollection`)
       .then((res) => res.json())
       .then((data) => setNew_collections(data));
   }, []);
