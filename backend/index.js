@@ -1,4 +1,4 @@
-require('dotenv').config();
+require("dotenv").config();
 
 const express = require("express");
 const app = express();
@@ -6,12 +6,15 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const User = require("./model/model");
 const jwt = require("jsonwebtoken");
+const cloudinary = require("cloudinary").v2;
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const multer = require("multer");
 const path = require("path");
 const Product = require("./model/image");
 const PORT = process.env.PORT || 3001;
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 mongoose
@@ -21,8 +24,7 @@ mongoose
   })
   .then(() => console.log("mongodb atlas connected"))
   .catch((err) => console.log(err));
-  console.log("MONGO_URI:", process.env.MONGO_URI);
-
+console.log("MONGO_URI:", process.env.MONGO_URI);
 
 // resgister
 
@@ -77,24 +79,29 @@ app.post("/login", async (req, res) => {
 });
 
 // image storage engine
-const storage = multer.diskStorage({
-  destination: "./upload/images",
-  filename: (req, file, cb) => {
-    return cb(
-      null,
-      `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`
-    );
+
+// Configure Cloudinary with your credentials
+cloudinary.config({
+  cloud_name: "dgjkhhzru",
+  api_key: "296736478373897",
+  api_secret: "l1eY9PmD3GqcCw3ADTEKpBWG99w",
+});
+
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "gen-z-products", // optional folder name in Cloudinary
+    allowed_formats: ["jpg", "jpeg", "png"],
   },
 });
 
-const upload = multer({ storage: storage });
-
-app.use("/images", express.static("upload/images"));
+const upload = multer({ storage });
 
 app.post("/upload", upload.single("product"), (req, res) => {
+  console.log("📸 FILE INFO:", req.file);
   res.json({
     success: 1,
-    image_url: `http://localhost:3001/images/${req.file.filename}`,
+    image_url: req.file.path,
   });
 });
 
@@ -138,25 +145,23 @@ app.get("/allproducts", async (req, res) => {
   res.send(products);
 });
 
-// creating new collection 
+// creating new collection
 
-app.get("/newcollection", async(req,res)=>{
+app.get("/newcollection", async (req, res) => {
   let products = await Product.find({});
   let newcollection = products.slice(1).slice(-8);
   console.log("Newcollection fetched");
   res.send(newcollection);
-  
-})
+});
 
 // end point for popular
 
-app.get("/popularinwomen", async (req,res) => {
-  let products = await Product.find({category:"women"});
-  let popular_in_women = products.slice(0,4);
+app.get("/popularinwomen", async (req, res) => {
+  let products = await Product.find({ category: "women" });
+  let popular_in_women = products.slice(0, 4);
   console.log("popular in  women fetched");
-  res.send(popular_in_women); 
-  
-})
+  res.send(popular_in_women);
+});
 
 app.get("/test", (req, res) => {
   res.send("Backend is alive!");

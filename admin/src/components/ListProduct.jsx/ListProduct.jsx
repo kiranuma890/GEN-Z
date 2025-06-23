@@ -6,7 +6,7 @@ const ListProduct = () => {
   const [allproducts, setAllproducts] = useState([]);
 
   const fetchInfo = async () => {
-    await fetch("http://localhost:3001/allproducts")
+    await fetch(`${import.meta.env.VITE_APP_API_URL}/allproducts`)
       .then((res) => res.json())
       .then((data) => {
         setAllproducts(data);
@@ -18,7 +18,7 @@ const ListProduct = () => {
   }, []);
 
   const remove_product = async (id) => {
-    await fetch("http://localhost:3001/removeproduct", {
+    await fetch(`${import.meta.env.VITE_APP_API_URL}/removeproduct`, {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -44,10 +44,10 @@ const ListProduct = () => {
         <hr />
         {allproducts.map((product, index) => {
           return (
-            <>
+            <React.Fragment key={product.id || index}>
               {" "}
               <div
-                key={index}
+                // key={index || product.id}
                 className="listproduct-format-main listproduct-format"
               >
                 <img
@@ -67,7 +67,7 @@ const ListProduct = () => {
                 />
               </div>
               <hr />
-            </>
+            </React.Fragment>
           );
         })}
       </div>

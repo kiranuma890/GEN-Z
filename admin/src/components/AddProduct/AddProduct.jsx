@@ -28,30 +28,37 @@ const AddProduct = () => {
     let product = productDetails;
 
     let formData = new FormData();
-    formData.append('product',image);
+    formData.append("product", image);
 
-    await fetch('http://localhost:3001/upload',{
-      method:'POST',
-      headers:{
-        Accept:'application/json',
+    await fetch(`${import.meta.env.VITE_APP_API_URL}/upload`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
       },
-      body:formData,
-    }).then((resp)=>resp.json()).then((data)=>{responseData=data})
+      body: formData,
+    })
+      .then((resp) => resp.json())
+      .then((data) => {
+        console.log("🌐 Upload response from backend:"), (responseData = data);
+      });
+    console.log("API URL:", import.meta.env.VITE_APP_API_URL);
 
-    if(responseData.success){
+    if (responseData.success) {
       product.image = responseData.image_url;
       console.log(product);
 
-      await fetch('http://localhost:3001/addproduct',{
-        method:'POST',
-        headers:{
-          Accept:'application/json',
-          'Content-Type' : 'application/json',
+      await fetch(`${import.meta.env.VITE_APP_API_URL}/addproduct`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(product),
-      }).then((resp)=>resp.json()).then((data)=>{
-        data.success?alert("Product Added"):alert("Failed")
       })
+        .then((resp) => resp.json())
+        .then((data) => {
+          data.success ? alert("Product Added") : alert("Failed");
+        });
     }
   };
 
